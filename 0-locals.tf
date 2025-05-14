@@ -19,7 +19,6 @@ locals {
     "iamcredentials.googleapis.com",    # For IAM Service Account credentials
   ]
 
-
   # GitHub Configuration for Container Registry Authentication
   github_config = var.github_config
 }
