@@ -19,7 +19,5 @@ locals {
     "iamcredentials.googleapis.com",    # For IAM Service Account credentials
   ]
 
-  # GitHub Configuration
-  # Using variables for secure credential management
-  github_config = var.github_config
+
 }
