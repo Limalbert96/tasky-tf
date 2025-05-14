@@ -20,4 +20,6 @@ locals {
   ]
 
 
+  # GitHub Configuration for Container Registry Authentication
+  github_config = var.github_config
 }

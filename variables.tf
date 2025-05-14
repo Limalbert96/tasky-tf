@@ -1,5 +1,5 @@
 variable "github_config" {
-  description = "GitHub configuration including username and PAT"
+  description = "GitHub configuration including username and PAT for GHCR authentication"
   type = object({
     username = string
     pat     = string

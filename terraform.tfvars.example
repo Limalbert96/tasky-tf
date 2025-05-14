@@ -1,0 +1,5 @@
+# Example values for GitHub Container Registry authentication
+github_config = {
+  username = "your-github-username"
+  pat     = "your-github-pat-with-package-read-access"
+}
