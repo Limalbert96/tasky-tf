@@ -3,7 +3,7 @@
 
 locals {
   # Basic GCP Project Configuration
-  project_id = "turing-energy-457000-j5"          # Unique project identifier
+  project_id = "clgcporg10-187"          # Unique project identifier
   region     = "us-central1"            # Primary deployment region
 
   # Required Google Cloud APIs
