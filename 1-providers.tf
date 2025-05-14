@@ -28,9 +28,7 @@ provider "google" {
 # 2. No explicit service account configuration
 # 3. Missing RBAC restrictions
 provider "kubernetes" {
-  host                   = "https://${google_container_cluster.gke.endpoint}"
-  token                  = data.google_client_config.default.access_token
-  cluster_ca_certificate = base64decode(google_container_cluster.gke.master_auth[0].cluster_ca_certificate)
+  config_path = "~/.kube/config"
   # RECOMMENDATIONS:
   # 1. Use dedicated service account with minimal permissions
   # 2. Implement pod security policies

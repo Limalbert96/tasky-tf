@@ -36,3 +36,4 @@ terraform.rc
 load_test.py
 newrelic-secret.yaml
 stolen_backup/
+tasky/
