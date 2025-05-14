@@ -1,0 +1,38 @@
+# Local .terraform directories
+# Terraform directories and files
+**/.terraform/*
+.terraform/
+*.tfstate
+*.tfstate.*
+crash.log
+crash.*.log
+*.tfvars
+*.tfvars.json
+override.tf
+override.tf.json
+*_override.tf
+*_override.tf.json
+.terraformrc
+terraform.rc
+.terraform.lock.hcl
+
+# Environment variables
+.env
+*.env
+
+# macOS system files
+.DS_Store
+
+# IDE specific files
+.idea/
+.vscode/
+*.swp
+*.swo
+
+# Logs
+*.log
+
+# Project specific files
+load_test.py
+newrelic-secret.yaml
+stolen_backup/
