@@ -3,7 +3,7 @@
 
 locals {
   # Basic GCP Project Configuration
-  project_id = "clgcporg10-187"          # Unique project identifier
+  project_id = "wiz-demo1"          # Unique project identifier
   region     = "us-central1"            # Primary deployment region
 
   # Required Google Cloud APIs
@@ -19,6 +19,21 @@ locals {
     "iamcredentials.googleapis.com",    # For IAM Service Account credentials
   ]
 
-  # GitHub Configuration for Container Registry Authentication
-  github_config = var.github_config
+  # GitHub Configuration
+  # Security Anti-Pattern: Credentials in version control
+  # Critical Issues:
+  # 1. PAT exposed in code
+  # 2. No encryption
+  # 3. No rotation policy
+  # 
+  # Production Recommendations:
+  # 1. Use Secret Manager or environment variables
+  # 2. Implement regular credential rotation
+  # 3. Use workload identity when possible
+  github_config = {
+    username = "xxx"
+    # This is intentionally insecure for demonstration
+    # NEVER store credentials in version control
+    pat = "xxx"
+  }
 }
