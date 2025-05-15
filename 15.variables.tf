@@ -11,3 +11,10 @@ variable "PAT" {
   default     = ""
   sensitive   = true
 }
+
+variable "google_credentials" {
+  description = "Google Cloud Service Account credentials JSON"
+  type        = string
+  default     = ""
+  sensitive   = true
+}

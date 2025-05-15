@@ -10,12 +10,11 @@
 # 6. Enable audit logging for all provider actions
 
 # Google Cloud Provider Configuration
-# SECURITY RISK: Using default Application Default Credentials
-# which may have overly broad permissions
+# Using credentials from GitHub Actions environment variable
 provider "google" {
-  project = local.project_id
-  region  = local.region
-  # MISSING: No provider-level constraints
+  project     = local.project_id
+  region      = local.region
+  credentials = var.google_credentials != "" ? var.google_credentials : null
   # RECOMMENDATION: Add constraints for:
   # - Allowed services
   # - Resource locations

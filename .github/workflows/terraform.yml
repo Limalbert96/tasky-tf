@@ -14,9 +14,8 @@ on:
   workflow_dispatch:  # Allow manual triggering
 
 env:
-  # Use GCP_SA_KEY for Google Cloud credentials
-  GOOGLE_CREDENTIALS: ${{ secrets.GCP_SA_KEY }}
   # Map GitHub secrets to Terraform variables
+  TF_VAR_google_credentials: ${{ secrets.GCP_SA_KEY }}
   TF_VAR_USERNAME: ${{ secrets.USERNAME }}
   TF_VAR_PAT: ${{ secrets.PAT }}
 
