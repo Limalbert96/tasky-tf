@@ -2,23 +2,23 @@ name: Terraform CI/CD Pipeline
 
 on:
   push:
-    branches: [ main ]
+    branches: ['main']
     paths:
-      - '**/*.tf'
+      - '**.tf'
       - '.github/workflows/terraform.yml'
   pull_request:
-    branches: [ main ]
+    branches: ['main']
     paths:
-      - '**/*.tf'
+      - '**.tf'
       - '.github/workflows/terraform.yml'
-  workflow_dispatch:  # Allow manual trigger
+  workflow_dispatch:  # Allow manual triggering
 
 env:
   # Use GCP_SA_KEY for Google Cloud credentials
-  # This secret must be added to the GitHub repository secrets
-  # The value should be the output of github_actions_sa_key from Terraform
-  # Run: terraform output -raw github_actions_sa_key
   GOOGLE_CREDENTIALS: ${{ secrets.GCP_SA_KEY }}
+  # Map GitHub secrets to Terraform variables
+  TF_VAR_USERNAME: ${{ secrets.USERNAME }}
+  TF_VAR_PAT: ${{ secrets.PAT }}
 
 jobs:
   terraform:
@@ -41,8 +41,6 @@ jobs:
 
       - name: Terraform Init
         id: init
-        env:
-          GOOGLE_CREDENTIALS: ${{ secrets.GCP_SA_KEY }}
         run: terraform init
 
       - name: Terraform Validate
@@ -51,8 +49,7 @@ jobs:
 
       - name: Terraform Plan
         id: plan
-        if: github.event_name == 'pull_request'
-        run: terraform plan -no-color -var-file="github-secret.tfvars"
+        run: terraform plan -no-color
         continue-on-error: true
 
       - name: Update Pull Request
@@ -63,10 +60,10 @@ jobs:
         with:
           github-token: ${{ secrets.GITHUB_TOKEN }}
           script: |
-            const output = `#### Terraform Format and Style\`${{ steps.fmt.outcome }}\`
-            #### Terraform Initialization\`${{ steps.init.outcome }}\`
-            #### Terraform Validation\`${{ steps.validate.outcome }}\`
-            #### Terraform Plan\`${{ steps.plan.outcome }}\`
+            const output = `#### Terraform Format and Style \`${{ steps.fmt.outcome }}\`
+            #### Terraform Initialization \`${{ steps.init.outcome }}\`
+            #### Terraform Validation \`${{ steps.validate.outcome }}\`
+            #### Terraform Plan \`${{ steps.plan.outcome }}\`
             
             <details><summary>Show Plan</summary>
             
@@ -86,7 +83,10 @@ jobs:
             })
 
       - name: Terraform Apply
-        if: github.ref == 'refs/heads/main' && github.event_name == 'push'
-        env:
-          GOOGLE_CREDENTIALS: ${{ secrets.GCP_SA_KEY }}
-        run: terraform apply -auto-approve -var-file="github-secret.tfvars"
+        if: github.ref == 'refs/heads/main' && (github.event_name == 'push' || github.event_name == 'workflow_dispatch')
+        run: terraform apply -auto-approve
+
+      - name: Terraform Output
+        if: github.ref == 'refs/heads/main' && (github.event_name == 'push' || github.event_name == 'workflow_dispatch')
+        run: terraform output
+        continue-on-error: true

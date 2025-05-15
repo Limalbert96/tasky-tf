@@ -19,8 +19,4 @@ locals {
     "iamcredentials.googleapis.com",    # For IAM Service Account credentials
   ]
 
-  # GitHub Configuration
-  # Security Best Practice: Credentials should not be stored in version control
-  # Instead, they should be provided via environment variables or secret management
-  # The GitHub username and PAT will be provided through CI/CD environment variables
 }

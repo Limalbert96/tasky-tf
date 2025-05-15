@@ -2,6 +2,15 @@
 
 This project demonstrates a deliberately vulnerable infrastructure setup for educational purposes. It deploys a task management application (Tasky) on Google Cloud Platform using Terraform.
 
+## GitHub Secrets Setup
+
+Before running the CI/CD pipeline, you must manually set the following secrets in GitHub repository settings for both repositories (Limalbert96/tasky-tf and Limalbert96/tasky):
+
+1. **USERNAME** - Your GitHub username for container registry authentication
+2. **PAT** - Your GitHub Personal Access Token with appropriate permissions (packages:read, packages:write)
+
+The GCP_SA_KEY secret will be automatically set by Terraform when you run `terraform apply`.
+
 ## Architecture Components
 
 - **VPC Network**: Custom VPC with public and private subnets

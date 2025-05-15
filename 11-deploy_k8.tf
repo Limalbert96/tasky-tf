@@ -10,9 +10,9 @@ resource "kubernetes_secret" "ghcr_secret" {
     ".dockerconfigjson" = jsonencode({
       auths = {
         "ghcr.io" = {
-          # Using environment variables for credentials
-          auth = base64encode("${var.github_username}:${var.github_pat}")
-        }
+          # Using actual GitHub credentials from tfvars file
+          auth = base64encode("${var.USERNAME}:${var.PAT}")
+        } 
       }
     })
   }
@@ -123,6 +123,15 @@ resource "kubernetes_cluster_role_binding" "tasky_admin_binding" {
 resource "kubernetes_deployment" "tasky" {
   metadata {
     name = "tasky"
+    annotations = {
+      "kubernetes.io/change-cause" = "Initial deployment by Terraform"
+    }
+  }
+  
+  timeouts {
+    create = "10m"
+    update = "10m"
+    delete = "5m"
   }
 
   spec {
@@ -145,12 +154,14 @@ resource "kubernetes_deployment" "tasky" {
         service_account_name = kubernetes_service_account.tasky_admin.metadata[0].name
         
         image_pull_secrets {
-          name = kubernetes_secret.ghcr_secret.metadata[0].name
+          name = "ghcr-secret"
         }
         
         container {
           name  = "tasky"
-          image = "ghcr.io/${var.github_username}/tasky:latest"
+          # Using the GitHub Container Registry image with hardcoded username for local testing
+          # In GitHub Actions, this will be replaced with the value from secrets
+          image = "ghcr.io/limalbert96/tasky:latest"
           
           env {
             name  = "MONGODB_URI"
@@ -171,6 +182,29 @@ resource "kubernetes_deployment" "tasky" {
           
           port {
             container_port = 8080
+          }
+          
+          readiness_probe {
+            http_get {
+              path = "/"
+              port = 8080
+            }
+            initial_delay_seconds = 10
+            period_seconds = 5
+            timeout_seconds = 2
+            success_threshold = 1
+            failure_threshold = 3
+          }
+          
+          liveness_probe {
+            http_get {
+              path = "/"
+              port = 8080
+            }
+            initial_delay_seconds = 30
+            period_seconds = 10
+            timeout_seconds = 5
+            failure_threshold = 5
           }
           
           resources {
