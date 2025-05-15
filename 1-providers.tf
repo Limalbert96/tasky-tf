@@ -28,9 +28,15 @@ provider "google" {
 # 2. No explicit service account configuration
 # 3. Missing RBAC restrictions
 provider "kubernetes" {
-  host                   = "https://${google_container_cluster.gke.endpoint}"
-  token                  = data.google_client_config.default.access_token
-  cluster_ca_certificate = base64decode(google_container_cluster.gke.master_auth[0].cluster_ca_certificate)
+  # This configuration allows the provider to gracefully handle the case when the cluster is gone
+  host                   = try("https://${google_container_cluster.gke.endpoint}", "")
+  token                  = try(data.google_client_config.default.access_token, "")
+  cluster_ca_certificate = try(base64decode(google_container_cluster.gke.master_auth[0].cluster_ca_certificate), "")
+  
+  # Skip validation when the cluster doesn't exist
+  ignore_annotations = [".*"]
+  ignore_labels      = [".*"]
+  
   # RECOMMENDATIONS:
   # 1. Use dedicated service account with minimal permissions
   # 2. Implement pod security policies

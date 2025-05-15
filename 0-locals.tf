@@ -20,20 +20,7 @@ locals {
   ]
 
   # GitHub Configuration
-  # Security Anti-Pattern: Credentials in version control
-  # Critical Issues:
-  # 1. PAT exposed in code
-  # 2. No encryption
-  # 3. No rotation policy
-  # 
-  # Production Recommendations:
-  # 1. Use Secret Manager or environment variables
-  # 2. Implement regular credential rotation
-  # 3. Use workload identity when possible
-  github_config = {
-    username = "xxx"
-    # This is intentionally insecure for demonstration
-    # NEVER store credentials in version control
-    pat = "xxx"
-  }
+  # Security Best Practice: Credentials should not be stored in version control
+  # Instead, they should be provided via environment variables or secret management
+  # The GitHub username and PAT will be provided through CI/CD environment variables
 }
